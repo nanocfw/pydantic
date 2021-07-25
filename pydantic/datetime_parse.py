@@ -124,7 +124,10 @@ def parse_date(value: Union[date, StrBytesIntFloat]) -> date:
 
     match = date_re.match(value)  # type: ignore
     if match is None:
-        raise errors.DateError()
+        if 'T' in value:  # type: ignore
+            match = date_re.match(value[:value.index('T')])  # type: ignore
+        if match is None:
+            raise errors.DateError()
 
     kw = {k: int(v) for k, v in match.groupdict().items()}
 
